@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Visualizador de Logs</title>
+    <style>
+        body { font-family: Arial; background: #111; color: #eee; }
+        .error { color: red; }
+        .warning { color: orange; }
+        .auth { color: lightblue; }
+        .normal { color: #ccc; }
+    </style>
+</head>
+<body>
+
+<h1>📊 Logs Dashboard</h1>
+
+<form method="get">
+    <label>Host:</label>
+    <select name="host" onchange="this.form.submit()">
+        <option value="">--</option>
+        {% for h in hosts %}
+            <option value="{{ h }}" {% if h == selected_host %}selected{% endif %}>{{ h }}</option>
+        {% endfor %}
+    </select>
+
+    <label>Log:</label>
+    <select name="log">
+        <option value="">--</option>
+        {% for l in log_files %}
+            <option value="{{ l }}" {% if l == selected_log %}selected{% endif %}>{{ l }}</option>
+        {% endfor %}
+    </select>
+
+    <label>Filtro:</label>
+    <select name="filter">
+        <option value="all">Todos</option>
+        <option value="error">Errores</option>
+        <option value="warning">Warnings</option>
+        <option value="auth">Auth</option>
+    </select>
+
+    <input type="text" name="search" placeholder="Buscar..." value="{{ search or '' }}">
+
+    <button type="submit">Ver</button>
+</form>
+
+<hr>
+
+<pre>
+{% for line, category in logs %}
+<span class="{{ category }}">{{ line }}</span>
+{% endfor %}
+</pre>
+
+</body>
+</html>

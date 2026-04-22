@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualizador de Logs | {{ selected_host or 'Inicio' }}</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+
+<body data-search="{{ search or '' }}">
+
+<header>
+    <h1><span>📊</span> Visualizador de logs 
+        <small style="font-size: 0.8rem; opacity: 0.5;">{{ selected_host }}</small>
+    </h1>
+    
+    <form method="get">
+        <div class="field">
+            <label>Servidor</label>
+            <select name="host" onchange="this.form.submit()">
+                <option value="">Seleccionar...</option>
+                {% for h in hosts %}
+                    <option value="{{ h }}" {% if h == selected_host %}selected{% endif %}>{{ h }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="field">
+            <label>Archivo Log</label>
+            <select name="log">
+                <option value="">--</option>
+                {% for l in log_files %}
+                    <option value="{{ l }}" {% if l == selected_log %}selected{% endif %}>{{ l }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="field">
+            <label>Nivel</label>
+            <select name="filter">
+                <option value="all">TODOS</option>
+                <option value="error">ERRORES</option>
+                <option value="warning">WARNINGS</option>
+            </select>
+        </div>
+
+        <div class="field" style="flex: 1;">
+            <label>Búsqueda rápida</label>
+            <input type="text" name="search" placeholder="Patrón de texto..." value="{{ search or '' }}">
+        </div>
+
+        <button type="submit">BUSCAR</button>
+    </form>
+</header>
+
+<main>
+    <div class="log-container">
+        {% if logs %}
+            {% for line, category in logs %}
+                <div class="{{ category }}">> {{ line }}</div>
+            {% endfor %}
+        {% else %}
+            <div style="text-align: center; margin-top: 50px; opacity: 0.5;">
+                Selecciona una máquina y un archivo para visualizar
+            </div>
+        {% endif %}
+    </div>
+</main>
+
+<script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+
+</body>
+</html>
