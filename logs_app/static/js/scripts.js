@@ -1,9 +1,9 @@
 const container = document.querySelector('.log-container');
 
-// 🔍 Obtener búsqueda desde HTML
+//  Obtener búsqueda desde HTML
 const search = document.body.dataset.search.toLowerCase();
 
-// ✨ Highlight dinámico
+//  Highlight dinámico
 if (search) {
     document.querySelectorAll('.log-container div').forEach(el => {
         const text = el.innerHTML;
