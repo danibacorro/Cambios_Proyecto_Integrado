@@ -1,24 +1,13 @@
 from flask import Flask, render_template, request
 import subprocess
-import logging
-
-# Configuración de logs
-logging.basicConfig(
-    filename='/app/app.log',
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s'
-)
 
 app = Flask(__name__)
 
 SSH_TARGET = "dani@172.16.0.200"
 
-
-# Función principal con loggeo por actividad
 def ejecutar_ssh(comando):
     try:
-        logging.info(f"Ejecutando SSH: {comando}")
-
+        
         resultado = subprocess.run(
             [
                 "ssh",
@@ -35,17 +24,14 @@ def ejecutar_ssh(comando):
         )
 
         if resultado.returncode != 0:
-            logging.error(f"Error SSH: {resultado.stderr.strip()}")
             return [f"Error SSH: {resultado.stderr.strip()}"]
 
         return resultado.stdout.splitlines()
 
     except subprocess.TimeoutExpired:
-        logging.error("Timeout en conexión SSH")
         return ["Error: Timeout en la conexión SSH"]
 
     except Exception as e:
-        logging.error(f"Error general: {str(e)}")
         return [f"Error: {str(e)}"]
 
 
