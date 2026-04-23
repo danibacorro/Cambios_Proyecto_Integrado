@@ -54,7 +54,6 @@ services:
     restart: unless-stopped
     volumes:
       - /home/dani/.ssh:/root/.ssh:ro
-      - ./logs_app/logs:/app/logs
     networks:
       - web
     #Evita escalado de privilegios y ataques setuid dentro del contenedor
