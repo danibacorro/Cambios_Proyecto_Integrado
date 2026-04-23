@@ -54,16 +54,21 @@ services:
     restart: unless-stopped
     volumes:
       - /home/dani/.ssh:/root/.ssh:ro
+      - ./logs_app/logs:/app/logs
     networks:
       - web
+    #Evita escalado de privilegios y ataques setuid dentro del contenedor
+    security_opt:
+      - no-new-privileges:true
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.logs.rule=Host(`logs.dani.gonzalonazareno.org`)"
       - "traefik.http.routers.logs.entrypoints=websecure"
       - "traefik.http.routers.logs.tls=true"
       - "traefik.http.services.logs-service.loadbalancer.server.port=5000"
-      - "traefik.http.routers.logs.middlewares=secure-headers@file,limit-peticiones@file"
-
+      - "traefik.http.middlewares.logs-auth.basicauth.users=dani:$$1$$RoTVYexo$$WqAwIPmDQ9EUIs2NXNXYd1"
+      - "traefik.http.routers.logs.middlewares=logs-auth,secure-headers@file,limit-peticiones@file"
 networks:
   web:
     driver: bridge
+
